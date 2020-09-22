@@ -1,4 +1,5 @@
 import React from "react";
+import SingleFamily from "./singleFamily";
 
 class Headers extends React.Component {
   constructor() {
@@ -8,33 +9,31 @@ class Headers extends React.Component {
       gotHouses: null
     };
   }
-  componentDidMount() {
-    // console.log("entered");
+
+  fetchData() {
     const url =
       "https://raw.githubusercontent.com/nnnkit/json-data-collections/master/got-houses.json";
     fetch(url)
       .then(res => res.json())
       .then(houses => {
-        // console.log(houses);
         this.setState({ gotHouses: houses });
       });
   }
+  componentDidMount() {
+    this.fetchData();
+  }
   getHousesName() {
-    // console.log(this.state.gotHouses);
     if (this.state.gotHouses) {
       let housesName = this.state.gotHouses.houses.map(house => house.name);
       return housesName;
     } else return;
   }
   handleClick = index => {
-    // console.log(index);
     this.setState({ activeHouse: index });
   };
 
   render() {
     let housesName = this.getHousesName();
-    // let housesName = this.state.got.houses.map(house => house.name);
-    // console.log(housesName);
     return (
       <>
         <div class="header-heading flex">
@@ -63,6 +62,11 @@ class Headers extends React.Component {
                 })}
           </ul>
         </nav>
+        {this.state.gotHouses ? (
+          <SingleFamily {...this.state} housesName={housesName} />
+        ) : (
+          "Loading..."
+        )}
       </>
     );
   }
